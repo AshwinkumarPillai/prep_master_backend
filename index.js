@@ -14,12 +14,12 @@ app.use(cors());
 const userRoutes = require("./src/routes/user.routes");
 const adminRoutes = require("./src/routes/admin.routes");
 const testRoutes = require("./src/routes/test.routes");
-// const questionRoutes = require("./src/routes/question.routes");
+const questionRoutes = require("./src/routes/question.routes");
 
 app.use("/user", userRoutes);
 app.use("/admin", adminRoutes);
 app.use("/test", testRoutes);
-// app.use("/question", questionRoutes);
+app.use("/question", questionRoutes);
 
 app.use(require("./src/middleware/handeError").handleError);
 // -------------------- ROUTES ---------------------------------------------------- //

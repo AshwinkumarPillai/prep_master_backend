@@ -20,6 +20,7 @@ module.exports.updateTest = asyncCatch(async (req, res) => {
   test.time_limit = time_limit;
   test.questions = questions;
   await test.save();
+  test = await Test.findById(testId).populate("questions");
   return res.json({ message: "Test Updated successfully!", test, status: 200 });
 });
 
@@ -32,7 +33,7 @@ module.exports.deleteTest = asyncCatch(async (req, res) => {
 });
 
 module.exports.getAllTest = asyncCatch(async (req, res) => {
-  let tests = await Test.find({});
+  let tests = await Test.find({}).populate("questions");
   return res.json({ message: "Tests fetched successfully!", tests, status: 200 });
 });
 

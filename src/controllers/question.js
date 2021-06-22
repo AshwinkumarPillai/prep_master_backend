@@ -9,7 +9,7 @@ module.exports.addQuestion = asyncCatch(async (req, res) => {
   let question = new Question({ title, options, multiCorrect, correctOption, correctOptions });
   if (explanation) question.explanation = explanation;
   await question.save();
-  return res.json({ message: "Question Created Successfully!", test, status: 200 });
+  return res.json({ message: "Question Created Successfully!", question, status: 200 });
 });
 
 module.exports.updateQuestion = asyncCatch(async (req, res) => {
@@ -24,7 +24,7 @@ module.exports.updateQuestion = asyncCatch(async (req, res) => {
   question.multiCorrect = multiCorrect;
   if (explanation) question.explanation = explanation;
   await question.save();
-  return res.json({ message: "Question Updated Successfully!", test, status: 200 });
+  return res.json({ message: "Question Updated Successfully!", question, status: 200 });
 });
 
 module.exports.deleteQuestion = asyncCatch(async (req, res) => {
