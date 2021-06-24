@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const asyncCatch = require("../middleware/async_catch").asyncCatch;
 const { BadUserInput } = require("../utils/custom_error");
