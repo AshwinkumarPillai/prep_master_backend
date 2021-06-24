@@ -34,22 +34,9 @@ module.exports.deleteQuestion = asyncCatch(async (req, res) => {
   return res.json({ message: "Question Deleted successfully!", status: 200 });
 });
 
-// old code
-// if (multiCorrect) {
-//   question.correctOptions = [];
-//   for (let option of correctOptions) {
-//     for (let opt of question.options) {
-//       if (opt.value == option) {
-//         question.correctOptions.push(opt._id);
-//         break;
-//       }
-//     }
-//   }
-// } else {
-//   for (let option of question.options) {
-//     if (option.value === correctOption) {
-//       question.correctOption = option._id;
-//       break;
-//     }
-//   }
-// }
+module.exports.searchQuestion = asyncCatch(async (req, res) => {
+  let { q } = req.query;
+  // let questions = await Question.find({ $text: { $search: q, $caseSensitive: false } });
+  let questions = await Question.find({ title: { $regex: q, $options: "i" } });
+  return res.json({ questions, status: 200 });
+});
