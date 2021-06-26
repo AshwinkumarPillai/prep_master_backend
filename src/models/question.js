@@ -10,7 +10,7 @@ const questionSchema = new Schema(
     options: [
       {
         _id: {
-          type: Number,
+          type: String,
         },
         value: {
           type: String,
@@ -19,7 +19,7 @@ const questionSchema = new Schema(
       },
     ],
     correctOption: {
-      type: Number,
+      type: String,
     },
     explanation: {
       type: String,
@@ -29,7 +29,7 @@ const questionSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    correctOptions: [{ type: Number }],
+    correctOptions: [{ type: String }],
   },
   { timestamps: true }
 );

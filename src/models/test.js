@@ -15,6 +15,10 @@ const testSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    public: {
+      type: Boolean,
+      default: false,
+    },
     questions: [{ type: Schema.Types.ObjectId, ref: "question" }],
   },
   { timestamps: true }
