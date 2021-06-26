@@ -38,15 +38,15 @@ module.exports.getAllTest = asyncCatch(async (req, res) => {
 });
 
 module.exports.getTestDetails = asyncCatch(async (req, res) => {
-  let { testId } = req.body;
-  let test = await Test.findById(testId).populate("questions", "-correctOption -correctOptions -explanation");
-  if (!testId) throw new EntityNotFound("Test Not Found. The requested resource is not longer available");
+  let { q } = req.query;
+  let test = await Test.findById(q).populate("questions", "-correctOption -correctOptions -explanation");
+  if (!test) throw new EntityNotFound("Test Not Found. The requested resource is not longer available");
   return res.json({ message: "Tests fetched successfully!", test, status: 200 });
 });
 
 module.exports.getFullTestDetails = asyncCatch(async (req, res) => {
-  let { testId } = req.body;
-  let test = await Test.findById(testId).populate("questions");
-  if (!testId) throw new EntityNotFound("Test Not Found. The requested resource is not longer available");
+  let { q } = req.query;
+  let test = await Test.findById(q).populate("questions");
+  if (!test) throw new EntityNotFound("Test Not Found. The requested resource is not longer available");
   return res.json({ message: "Tests fetched successfully!", test, status: 200 });
 });

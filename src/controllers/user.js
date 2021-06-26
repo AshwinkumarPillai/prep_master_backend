@@ -33,6 +33,7 @@ module.exports.Login = asyncCatch(async (req, res) => {
   );
   user.token = token;
   await user.save();
+  user.password = "";
   return res.json({ message: "Logged in successfully!", user, status: 200 });
 });
 
@@ -112,7 +113,7 @@ module.exports.fetchAllUserTestHistory = asyncCatch(async (req, res) => {
 });
 
 module.exports.fetchUserHistory = asyncCatch(async (req, res) => {
-  let { userId } = req.body;
+  let userId = req.user._id;
   if (!userId) throw new BadUserInput("Error needed Id's empty");
   let userHistory = await UserTestHistory.find({ userId }).populate("testId").sort({ createdAt: -1 });
   return res.json({ message: "Data Fetched Successfully!", userHistory, status: 200 });
