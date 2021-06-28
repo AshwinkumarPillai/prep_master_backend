@@ -4,7 +4,7 @@ const auth = require("../middleware/auth");
 
 router.post("/login", userController.Login);
 router.post("/register", userController.Register);
-router.post("/fetchUserHistroy", userController.fetchUserHistory);
+router.get("/fetchUserHistroy", auth.checkUser, userController.fetchUserHistory);
 router.post("/saveUserTestHistory", userController.saveUserTestHistory);
 router.post("/fetchUserTestHistroy", userController.fetchUserTestHistory);
 router.get("/fetchAllUserTestHistory", auth.checkUser, userController.fetchAllUserTestHistory);

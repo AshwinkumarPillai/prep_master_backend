@@ -7,6 +7,10 @@ const questionSchema = new Schema(
       type: String,
       required: true,
     },
+    image: {
+      data: Buffer,
+      contentType: String,
+    },
     options: [
       {
         _id: {
