@@ -27,7 +27,17 @@ module.exports.updateTest = asyncCatch(async (req, res) => {
 module.exports.deleteTest = asyncCatch(async (req, res) => {
   let { testId } = req.body;
   if (!testId) throw new EntityNotFound("Test Not Found. The requested resource is not longer available");
-  await Test.findByIdAndDelete(testId);
+  let test = await Test.findById(testId);
+  test.status = "ARCHIVED";
+  let tests = await Test.find({});
+  return res.json({ message: "Test Deleted successfully!", tests, status: 200 });
+});
+
+module.exports.restoreTest = asyncCatch(async (req, res) => {
+  let { testId } = req.body;
+  if (!testId) throw new EntityNotFound("Test Not Found. The requested resource is not longer available");
+  let test = await Test.findById(testId);
+  test.status = "PUBLISHED";
   let tests = await Test.find({});
   return res.json({ message: "Test Deleted successfully!", tests, status: 200 });
 });
@@ -40,11 +50,23 @@ module.exports.getAllTest = asyncCatch(async (req, res) => {
 module.exports.getTestDetails = asyncCatch(async (req, res) => {
   let { q } = req.query;
   let test = await Test.findById(q).populate("questions", "-correctOption -correctOptions -explanation");
-  if (!test) throw new EntityNotFound("Test Not Found. The requested resource is not longer available");
+  if (!test || test.status === "ARCHIVED") throw new EntityNotFound("Test Not Found. The requested resource is not longer available");
   return res.json({ message: "Tests fetched successfully!", test, status: 200 });
 });
 
 module.exports.getFullTestDetails = asyncCatch(async (req, res) => {
+  let { q } = req.query;
+  let test = await Test.findById(q).populate("questions");
+  if (!test) throw new EntityNotFound("Test Not Found. The requested resource is not longer available");
+  return res.json({ message: "Tests fetched successfully!", test, status: 200 });
+});
+
+module.exports.getArchivedTests = asyncCatch(async (req, res) => {
+  let tests = await Test.find({ status: "ARCHIVED" }).populate("questions");
+  return res.json({ message: "Tests fetched successfully!", tests, status: 200 });
+});
+
+module.exports.getArchivedTestDetails = asyncCatch(async (req, res) => {
   let { q } = req.query;
   let test = await Test.findById(q).populate("questions");
   if (!test) throw new EntityNotFound("Test Not Found. The requested resource is not longer available");

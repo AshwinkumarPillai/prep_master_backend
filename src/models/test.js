@@ -15,9 +15,10 @@ const testSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    public: {
-      type: Boolean,
-      default: false,
+    status: {
+      type: String,
+      enum: ["NEW", "PUBLISHED", "ARCHIVED"],
+      default: "NEW",
     },
     questions: [{ type: Schema.Types.ObjectId, ref: "question" }],
   },
