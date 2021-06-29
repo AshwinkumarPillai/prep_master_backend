@@ -30,7 +30,7 @@ module.exports.deleteTest = asyncCatch(async (req, res) => {
   let test = await Test.findById(testId);
   test.status = "ARCHIVED";
   await test.save();
-  let tests = await Test.find({});
+  let tests = await Test.find({ status: { $ne: "ARCHIVED" } });
   return res.json({ message: "Test archived successfully!", tests, status: 200 });
 });
 
@@ -38,9 +38,9 @@ module.exports.restoreTest = asyncCatch(async (req, res) => {
   let { testId } = req.body;
   if (!testId) throw new EntityNotFound("Test Not Found. The requested resource is not longer available");
   let test = await Test.findById(testId);
-  test.status = "PUBLISHED";
+  test.status = "NEW";
   await test.save();
-  let tests = await Test.find({});
+  let tests = await Test.find({ status: { $ne: "ARCHIVED" } });
   return res.json({ message: "Test restored successfully!", tests, status: 200 });
 });
 
@@ -54,12 +54,12 @@ module.exports.publishTest = asyncCatch(async (req, res) => {
 });
 
 module.exports.getAllTest = asyncCatch(async (req, res) => {
-  let tests = await Test.find({ status: "PUBLISHED" }).populate("questions", "-_id -correctOption -correctOptions -explanation");
+  let tests = await Test.find({ status: "PUBLISHED" });
   return res.json({ message: "Tests fetched successfully!", tests, status: 200 });
 });
 
 module.exports.getAllAdminTests = asyncCatch(async (req, res) => {
-  let tests = await Test.find({ status: { $ne: "ARCHIVED" } }).populate("questions");
+  let tests = await Test.find({ status: { $ne: "ARCHIVED" } });
   return res.json({ message: "Tests fetched successfully!", tests, status: 200 });
 });
 
@@ -78,7 +78,7 @@ module.exports.getFullTestDetails = asyncCatch(async (req, res) => {
 });
 
 module.exports.getArchivedTests = asyncCatch(async (req, res) => {
-  let tests = await Test.find({ status: "ARCHIVED" }).populate("questions");
+  let tests = await Test.find({ status: "ARCHIVED" });
   return res.json({ message: "Test fetched successfully!", tests, status: 200 });
 });
 
