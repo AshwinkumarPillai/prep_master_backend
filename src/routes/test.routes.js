@@ -3,6 +3,7 @@ const testController = require("../controllers/test");
 const auth = require("../middleware/auth");
 
 router.get("/fetchAllTests", testController.getAllTest);
+router.get("/fetchAllAdminTests", auth.checkUser.checkAdmin, testController.getAllAdminTests);
 router.get("/fetchTest", testController.getTestDetails);
 router.get("/fetchFullTest", testController.getFullTestDetails);
 router.post("/add", auth.checkAdmin, testController.addTest);

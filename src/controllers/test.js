@@ -43,14 +43,19 @@ module.exports.restoreTest = asyncCatch(async (req, res) => {
 });
 
 module.exports.getAllTest = asyncCatch(async (req, res) => {
-  let tests = await Test.find({}).populate("questions");
+  let tests = await Test.find({ status: "PUBLISHED" }).populate("questions", "-_id -correctOption -correctOptions -explanation");
+  return res.json({ message: "Tests fetched successfully!", tests, status: 200 });
+});
+
+module.exports.getAllAdminTests = asyncCatch(async (req, res) => {
+  let tests = await Test.find({ status: { $ne: "ARCHIVED" } }).populate("questions");
   return res.json({ message: "Tests fetched successfully!", tests, status: 200 });
 });
 
 module.exports.getTestDetails = asyncCatch(async (req, res) => {
   let { q } = req.query;
   let test = await Test.findById(q).populate("questions", "-correctOption -correctOptions -explanation");
-  if (!test || test.status === "ARCHIVED") throw new EntityNotFound("Test Not Found. The requested resource is not longer available");
+  if (!test || test.status !== "PUBLISHED") throw new EntityNotFound("Test Not Found. The requested resource is not longer available");
   return res.json({ message: "Tests fetched successfully!", test, status: 200 });
 });
 
