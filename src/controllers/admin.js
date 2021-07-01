@@ -9,9 +9,9 @@ module.exports.Login = asyncCatch(async (req, res) => {
   let { username, pwd } = req.body;
   if (!username || !pwd) throw new BadUserInput();
   let user = await Admin.findOne({ username });
-  if (!user) return res.json({ message: "User name or password incorrect. Please try again!", status: 400 });
+  if (!user) return res.status(401).json({ message: "User name or password incorrect. Please try again!", status: 401 });
   let isEqual = bcrypt.compareSync(pwd, user.password);
-  if (!isEqual) return res.json({ message: "User name or password incorrect. Please try again!", status: 400 });
+  if (!isEqual) return res.status(401).json({ message: "User name or password incorrect. Please try again!", status: 401 });
   let token = jwt.sign(
     {
       id: user._id,
