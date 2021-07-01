@@ -11,7 +11,7 @@ module.exports.Register = asyncCatch(async (req, res) => {
   let { username, pwd } = req.body;
   if (!username || !pwd) throw new BadUserInput();
   let user = await User.findOne({ username });
-  if (user) return res.json({ message: "User Name already exists. Try another username", status: 400 });
+  if (user) return res.status(400).json({ message: "User Name already exists. Try another username", status: 400 });
   const password = bcrypt.hashSync(pwd, 12);
   user = new User({ username, password });
   await user.save();
