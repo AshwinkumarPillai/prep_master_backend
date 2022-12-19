@@ -11,7 +11,8 @@ module.exports.Register = asyncCatch(async (req, res) => {
   let { username, pwd } = req.body;
   if (!username || !pwd) throw new BadUserInput();
   let user = await User.findOne({ username });
-  if (user) return res.status(400).json({ message: "User Name already exists. Try another username", status: 400 });
+  if (user)
+    return res.status(400).json({ message: "User Name already exists. Try another username", status: 400 });
   const password = bcrypt.hashSync(pwd, 12);
   user = new User({ username, password });
   await user.save();
@@ -22,9 +23,15 @@ module.exports.Login = asyncCatch(async (req, res) => {
   let { username, pwd } = req.body;
   if (!username || !pwd) throw new BadUserInput();
   let user = await User.findOne({ username });
-  if (!user) return res.status(401).json({ message: "User name or password incorrect. Please try again!", status: 400 });
+  if (!user)
+    return res
+      .status(401)
+      .json({ message: "User name or password incorrect. Please try again!", status: 400 });
   let isEqual = bcrypt.compareSync(pwd, user.password);
-  if (!isEqual) return res.status(401).json({ message: "User name or password incorrect. Please try again!", status: 400 });
+  if (!isEqual)
+    return res
+      .status(401)
+      .json({ message: "User name or password incorrect. Please try again!", status: 400 });
   let token = jwt.sign(
     {
       id: user._id,
@@ -94,13 +101,19 @@ module.exports.fetchUserTestHistory = asyncCatch(async (req, res) => {
   let { userId, testId, userTestHistoryId } = req.body;
   let userTestHistory;
   if (userTestHistoryId) {
-    userTestHistory = await UserTestHistory.findById(userTestHistoryId).populate("testId test_data.questionId");
+    userTestHistory = await UserTestHistory.findById(userTestHistoryId).populate(
+      "testId test_data.questionId"
+    );
     if (!userTestHistory) {
-      userTestHistory = await UserTestHistory.findOne({ userId, testId }).populate("testId test_data.questionId");
+      userTestHistory = await UserTestHistory.findOne({ userId, testId }).populate(
+        "testId test_data.questionId"
+      );
     }
   } else {
     if (!userId || !testId) throw new BadUserInput("Error needed Id's empty");
-    userTestHistory = await UserTestHistory.findOne({ userId, testId }).populate("testId test_data.questionId");
+    userTestHistory = await UserTestHistory.findOne({ userId, testId }).populate(
+      "testId test_data.questionId"
+    );
   }
   return res.json({ message: "Data Fetched Successfully!", userTestHistory, status: 200 });
 });
@@ -108,7 +121,9 @@ module.exports.fetchUserTestHistory = asyncCatch(async (req, res) => {
 module.exports.fetchAllUserTestHistory = asyncCatch(async (req, res) => {
   let { userId, testId } = req.body;
   if (!userId || !testId) throw new BadUserInput("Error needed Id's empty");
-  let userTestHistory = await UserTestHistory.find({ userId, testId }).populate("testId test_data.questionId");
+  let userTestHistory = await UserTestHistory.find({ userId, testId }).populate(
+    "testId test_data.questionId"
+  );
   return res.json({ message: "Data Fetched Successfully!", userTestHistory, status: 200 });
 });
 
@@ -117,4 +132,13 @@ module.exports.fetchUserHistory = asyncCatch(async (req, res) => {
   if (!userId) throw new BadUserInput("Error needed Id's empty");
   let userHistory = await UserTestHistory.find({ userId }).populate("testId").sort({ createdAt: -1 });
   return res.json({ message: "Data Fetched Successfully!", userHistory, status: 200 });
+});
+
+module.exports.Delete = asyncCatch(async (req, res) => {
+  let { username } = req.body;
+  if (!username) throw new BadUserInput();
+  let user = await User.findOne({ username });
+  if (!user) return res.status(401).json({ message: "User not found!", status: 400 });
+  await User.findByIdAndDelete(user._id);
+  return res.json({ message: "User Deleted Successfully!", user, status: 200 });
 });
