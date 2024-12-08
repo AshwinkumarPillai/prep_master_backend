@@ -20,6 +20,9 @@ app.use("/user", userRoutes);
 app.use("/admin", adminRoutes);
 app.use("/test", testRoutes);
 app.use("/question", questionRoutes);
+app.use("/schedule-pinger", (req, res) => {
+  res.send("Thank you for keeping me alive pinger!\n-Prep Master");
+});
 
 app.use(require("./src/middleware/handeError").handleError);
 // -------------------- ROUTES ---------------------------------------------------- //
